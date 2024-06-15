@@ -50,12 +50,8 @@
         @yield('content')
         <div class="row justify-content-center text-center mt-3">
             <div class="col-md-12">
-                <p>Back to Tutorial:
-                    <a href="https://www.allphptricks.com/laravel-user-registration-with-email-verification/"><strong>Tutorial Link</strong></a>
-                </p>
-                <p>
-                    For More Web Development Tutorials Visit: <a href="https://www.allphptricks.com/"><strong>AllPHPTricks.com</strong></a>
-                </p>
+              
+               
             </div>
         </div>
 

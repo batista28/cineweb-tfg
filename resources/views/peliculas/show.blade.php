@@ -23,7 +23,7 @@
                                     <input type="hidden" name="peliculaId" value="{{ $pelicula->id }}">
                                     <input type="hidden" name="nombre_lista" value="peliculas_pendientes">
                                     <input type="hidden" name="estado" value="pendiente">
-                                    <button type="submit" class="btn btn-primary">Agregar a Pendientes</button>
+                                    <button type="submit" class='btn-style'>Agregar a Pendientes</button>
                                 </form>
 
                                 <form action="{{ route('listas.addPelicula') }}" method="POST">
@@ -31,7 +31,7 @@
                                     <input type="hidden" name="peliculaId" value="{{ $pelicula->id }}">
                                     <input type="hidden" name="nombre_lista" value="peliculas_vistas">
                                     <input type="hidden" name="estado" value="vista">
-                                    <button type="submit" class="btn btn-success">Agregar a Vistas</button>
+                                    <button type="submit" class='btn-style'>Agregar a Vistas</button>
                                 </form>
 
                             @endauth

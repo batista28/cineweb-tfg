@@ -37,11 +37,9 @@
         color: white;
         background-color: #343a40;
         border: 2px solid white;
-        /* Borde externo de la tabla */
         margin-top: 20px;
         border-collapse: collapse;
         border-spacing: 0;
-        /* Añadir espacio entre filas para que no sean cuadrados */
     }
 
     .table-custom th,
@@ -57,7 +55,6 @@
 
     .table-custom th {
         font-size: 18px;
-        /* Texto más grande para los encabezados */
     }
 
     .table-custom tbody tr:nth-child(even) {
@@ -77,7 +74,6 @@
     h3 {
         color: white;
         font-size: 24px;
-        /* Tamaño de fuente más grande */
     }
 
     /* Estilos para los botones de acción */
@@ -95,220 +91,241 @@
     .action-btn:hover {
         background-color: #218838;
     }
+
+    /* Añadir margen inferior al contenido para evitar que el footer lo cubra */
+    .content-wrapper {
+        margin-bottom: 50px;
+    }
+
+    /* Estilos para el pie de página */
+    footer {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
 </style>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn-style">
-                    <a href="{{ route('listas.index', ['tipo' => 'series_pendientes']) }}">Series Pendientes</a>
-                </button>
-                <button type="button" class="btn-style">
-                    <a href="{{ route('listas.index', ['tipo' => 'peliculas_pendientes']) }}">Películas Pendientes</a>
-                </button>
-                <button type="button" class="btn-style">
-                    <a href="{{ route('listas.index', ['tipo' => 'series_vistas']) }}">Series Vistas</a>
-                </button>
-                <button type="button" class="btn-style">
-                    <a href="{{ route('listas.index', ['tipo' => 'peliculas_vistas']) }}">Películas Vistas</a>
-                </button>
+<div class="content-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn-style">
+                        <a href="{{ route('listas.index', ['tipo' => 'series_pendientes']) }}">Series Pendientes</a>
+                    </button>
+                    <button type="button" class="btn-style">
+                        <a href="{{ route('listas.index', ['tipo' => 'peliculas_pendientes']) }}">Películas
+                            Pendientes</a>
+                    </button>
+                    <button type="button" class="btn-style">
+                        <a href="{{ route('listas.index', ['tipo' => 'series_vistas']) }}">Series Vistas</a>
+                    </button>
+                    <button type="button" class="btn-style">
+                        <a href="{{ route('listas.index', ['tipo' => 'peliculas_vistas']) }}">Películas Vistas</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                @if ($tipo == 'series_pendientes' || $tipo == 'series_vistas')
+                    <div class="table-responsive">
+                        <h3>{{ $tipo == 'series_pendientes' ? 'Series Pendientes' : 'Series Vistas' }} de
+                            {{ $nombreUsuario }}</h3>
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Título</th>
+                                    <th>Sinopsis</th>
+                                    <th>Género</th>
+                                    <th>Año de Lanzamiento</th>
+                                    <th>Director</th>
+                                    <th>Estado de Emisión</th>
+                                    <th>Puntuación</th>
+                                    @if ($tipo == 'series_pendientes')
+                                        <th>Acciones</th>
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($items as $item)
+                                    <tr id="item-{{ $item->id }}">
+                                        <td>
+                                            @if ($item->serie && $item->serie->imagen)
+                                                <img src="{{ asset($item->serie->imagen) }}" alt="{{ $item->serie->titulo }}">
+                                            @else
+                                                No hay imagen disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->serie)
+                                                {{ $item->serie->titulo }}
+                                            @else
+                                                Serie no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->serie)
+                                                {{ $item->serie->sinopsis }}
+                                            @else
+                                                Sinopsis no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->serie)
+                                                {{ $item->serie->genero }}
+                                            @else
+                                                Género no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->serie)
+                                                {{ $item->serie->ano_lanzamiento }}
+                                            @else
+                                                Año de lanzamiento no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->serie)
+                                                {{ $item->serie->director }}
+                                            @else
+                                                Director no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->serie)
+                                                {{ $item->serie->estado_emision }}
+                                            @else
+                                                Estado de emisión no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->serie)
+                                                {{ $item->serie->puntuacion_media }}
+                                            @else
+                                                Puntuación no disponible
+                                            @endif
+                                        </td>
+                                        @if ($tipo == 'series_pendientes')
+                                            <td>
+                                                <button type="button" class="action-btn"
+                                                    onclick="agregarVista('series_pendientes', {{ $item->id }})">Agregar a
+                                                    Vistas</button>
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @if ($items->isEmpty())
+                            <p>No hay series disponibles.</p>
+                        @endif
+                    </div>
+                @elseif ($tipo == 'peliculas_pendientes' || $tipo == 'peliculas_vistas')
+                    <div class="table-responsive mt-4">
+                        <h3>{{ $tipo == 'peliculas_pendientes' ? 'Películas Pendientes' : 'Películas Vistas' }} de
+                            {{ $nombreUsuario }}</h3>
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Poster</th>
+                                    <th>Título</th>
+                                    <th>Sinopsis</th>
+                                    <th>Género</th>
+                                    <th>Año de Lanzamiento</th>
+                                    <th>Director</th>
+                                    <th>Puntuación</th>
+                                    @if ($tipo == 'peliculas_pendientes')
+                                        <th>Acciones</th>
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($items as $item)
+                                    <tr id="item-{{ $item->id }}">
+                                        <td>
+                                            @if ($item->pelicula && $item->pelicula->imagen)
+                                                <img src="{{ asset($item->pelicula->imagen) }}" alt="{{ $item->pelicula->titulo }}">
+                                            @else
+                                                No hay imagen disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->pelicula)
+                                                {{ $item->pelicula->titulo }}
+                                            @else
+                                                Película no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->pelicula)
+                                                {{ $item->pelicula->sinopsis }}
+                                            @else
+                                                Sinopsis no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->pelicula)
+                                                {{ $item->pelicula->genero }}
+                                            @else
+                                                Género no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->pelicula)
+                                                {{ $item->pelicula->ano_lanzamiento }}
+                                            @else
+                                                Año de lanzamiento no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->pelicula)
+                                                {{ $item->pelicula->director }}
+                                            @else
+                                                Director no disponible
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->pelicula)
+                                                {{ $item->pelicula->puntuacion_media }}
+                                            @else
+                                                Puntuación no disponible
+                                            @endif
+                                        </td>
+                                        @if ($tipo == 'peliculas_pendientes')
+                                            <td>
+                                                <button type="button" class="action-btn"
+                                                    onclick="agregarVista('peliculas_pendientes', {{ $item->id }})">Agregar a
+                                                    Vistas</button>
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @if ($items->isEmpty())
+                            <p>No hay películas disponibles.</p>
+                        @endif
+                    </div>
+                @else
+                    <p>Selecciona una opción para ver los detalles.</p>
+                @endif
             </div>
         </div>
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            @if ($tipo == 'series_pendientes' || $tipo == 'series_vistas')
-                <!-- Mostrar los elementos de la lista de Series -->
-                <div class="table-responsive">
-                    <h3>{{ $tipo == 'series_pendientes' ? 'Series Pendientes' : 'Series Vistas' }} de {{ $nombreUsuario }}
-                    </h3>
-                    <table class="table table-custom">
-                        <thead>
-                            <tr>
-                                <th>Imagen</th>
-                                <th>Título</th>
-                                <th>Sinopsis</th>
-                                <th>Género</th>
-                                <th>Año de Lanzamiento</th>
-                                <th>Director</th>
-                                <th>Estado de Emisión</th>
-                                <th>Puntuación</th>
-                                @if ($tipo == 'series_pendientes')
-                                    <th>Acciones</th>
-                                @endif
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($items as $item)
-                                <tr id="item-{{ $item->id }}">
-                                    <td>
-                                        @if ($item->serie && $item->serie->imagen)
-                                            <img src="{{ asset($item->serie->imagen) }}" alt="{{ $item->serie->titulo }}">
-                                        @else
-                                            No hay imagen disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->serie)
-                                            {{ $item->serie->titulo }}
-                                        @else
-                                            Serie no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->serie)
-                                            {{ $item->serie->sinopsis }}
-                                        @else
-                                            Sinopsis no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->serie)
-                                            {{ $item->serie->genero }}
-                                        @else
-                                            Género no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->serie)
-                                            {{ $item->serie->ano_lanzamiento }}
-                                        @else
-                                            Año de lanzamiento no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->serie)
-                                            {{ $item->serie->director }}
-                                        @else
-                                            Director no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->serie)
-                                            {{ $item->serie->estado_emision }}
-                                        @else
-                                            Estado de emisión no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->serie)
-                                            {{ $item->serie->puntuacion_media }}
-                                        @else
-                                            Puntuación no disponible
-                                        @endif
-                                    </td>
-                                    @if ($tipo == 'series_pendientes')
-                                        <td>
-                                            <button type="button" class="action-btn"
-                                                onclick="agregarVista('series_pendientes', {{ $item->id }})">Agregar a
-                                                Vistas</button>
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    @if ($items->isEmpty())
-                        <p>No hay series disponibles.</p>
-                    @endif
-                </div>
-            @elseif ($tipo == 'peliculas_pendientes' || $tipo == 'peliculas_vistas')
-                <!-- Mostrar los elementos de la lista de Películas -->
-                <div class="table-responsive mt-4">
-                    <h3>{{ $tipo == 'peliculas_pendientes' ? 'Películas Pendientes' : 'Películas Vistas' }} de
-                        {{ $nombreUsuario }}</h3>
-                    <table class="table table-custom">
-                        <thead>
-                            <tr>
-                                <th>Poster</th>
-                                <th>Título</th>
-                                <th>Sinopsis</th>
-                                <th>Género</th>
-                                <th>Año de Lanzamiento</th>
-                                <th>Director</th>
-                                <th>Puntuación</th>
-                                @if ($tipo == 'peliculas_pendientes')
-                                    <th>Acciones</th>
-                                @endif
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($items as $item)
-                                <tr id="item-{{ $item->id }}">
-                                    <td>
-                                        @if ($item->pelicula && $item->pelicula->imagen)
-                                            <img src="{{ asset($item->pelicula->imagen) }}" alt="{{ $item->pelicula->titulo }}">
-                                        @else
-                                            No hay imagen disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->pelicula)
-                                            {{ $item->pelicula->titulo }}
-                                        @else
-                                            Película no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->pelicula)
-                                            {{ $item->pelicula->sinopsis }}
-                                        @else
-                                            Sinopsis no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->pelicula)
-                                            {{ $item->pelicula->genero }}
-                                        @else
-                                            Género no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->pelicula)
-                                            {{ $item->pelicula->ano_lanzamiento }}
-                                        @else
-                                            Año de lanzamiento no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->pelicula)
-                                            {{ $item->pelicula->director }}
-                                        @else
-                                            Director no disponible
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($item->pelicula)
-                                            {{ $item->pelicula->puntuacion_media }}
-                                        @else
-                                            Puntuación no disponible
-                                        @endif
-                                    </td>
-                                    @if ($tipo == 'peliculas_pendientes')
-                                        <td>
-                                            <button type="button" class="action-btn"
-                                                onclick="agregarVista('peliculas_pendientes', {{ $item->id }})">Agregar a
-                                                Vistas</button>
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    @if ($items->isEmpty())
-                        <p>No hay películas disponibles.</p>
-                    @endif
-                </div>
-            @else
-                <p>Selecciona una opción para ver los detalles.</p>
-            @endif
-        </div>
-    </div>
-</div>
+<footer>
+    <p>&copy; 2024 Mi Sitio Web. Todos los derechos reservados.</p>
+</footer>
 
 <script>
     function agregarVista(tipo, id) {

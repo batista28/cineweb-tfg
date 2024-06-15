@@ -7,6 +7,7 @@
     <link rel="icon" href="img/logoCineWeb.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <title>CineWeb</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style>
         /* Estilos para el encabezado y la navegación */
         body {
@@ -337,6 +338,29 @@
         .btn-add:hover {
             background-color: #1abc9c;
         }
+
+        .btn-style {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #049dbf;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-style:hover {
+            background-color: #034e5f;
+        }
+
+        .btn-style a {
+            color: inherit;
+            text-decoration: none;
+        }
     </style>
 </head>
 
@@ -348,13 +372,14 @@
         </div>
         <nav>
             <a href="{{ route('peliculas.index') }}">Peliculas</a>
+            <a href="{{ route('series.index') }}">Series</a>
+            <a href="{{ route('listas.index') }}" style="margin-right: 10px;">Listas</a>
 
 
             @auth
                 <form method="POST" action="{{ route('logout') }}" style="display:inline;">
                     @csrf
-                    <button type="submit"
-                        style="background:none;border:none;color:white;text-decoration:underline;cursor:pointer;">Cerrar
+                    <button class='btn-style' type="submit">Cerrar
                         sesión</button>
                 </form>
             @else
@@ -513,6 +538,22 @@
         document.getElementById('search').addEventListener('change', function () {
             document.getElementById('searchForm').submit();
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+        var showLoginAlert = '{{ session("showLoginAlert") }}';
+
+        if (showLoginAlert == '1') {
+            Swal.fire({
+                title: '¡Has iniciado sesión!',
+                text: 'Enhorabuena, has iniciado sesión con éxito y podrás disfrutar completamente de la página.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+
+            // Una vez mostrada la alerta, limpiar la sesión para no mostrarla nuevamente
+            {{ session(['showLoginAlert' => null]) }};
+        }
+    });
     </script>
 </body>
 

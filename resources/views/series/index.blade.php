@@ -337,6 +337,44 @@
         .btn-add:hover {
             background-color: #1abc9c;
         }
+        .btn-style {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #049dbf;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-style:hover {
+            background-color: #034e5f;
+        }
+
+        .btn-style a {
+            color: inherit;
+            text-decoration: none;
+        }
+           /* Estilos para hacer la tabla responsive utilizando Bootstrap */
+           @media (max-width: 768px) {
+            /* Reduce el padding de las celdas en pantallas pequeñas */
+            th, td {
+                padding: 4px;
+                font-size: 14px;
+            }
+        }
+
+        /* Ajuste adicional para pantallas muy pequeñas */
+        @media (max-width: 576px) {
+            /* Oculta la imagen del poster en filas de la tabla */
+            table img {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -349,11 +387,24 @@
         <nav>
             <a href="{{ route('peliculas.index') }}" style="margin-right: 10px;">Peliculas</a>
             <a href="{{ route('series.index') }}" style="margin-right: 10px;">Series</a>
-        
+            <a href="{{ route('listas.index') }}" style="margin-right: 10px;">Listas</a>
 
-            <a href="{{ route('login') }}">Iniciar sesión</a>
-            <a href="{{ route('register') }}" style="margin-left: 10px;">Registrarse</a>
-        </nav>
+          
+
+            @auth
+                <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                    @csrf
+                    <button class='btn-style' type="submit"
+                       >Cerrar
+                        sesión</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}">Iniciar sesión</a>
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}">Registrarse</a>
+                @endif
+            @endauth
+      </nav>
     </header>
     <main>
         <div class="listapeliculas-container">
@@ -464,7 +515,7 @@
         <div class="footer-wrapper">
             <div class="footer-links">
                 <a href="/sobre-nosotros">Sobre nosotros</a>
-                <a href="/contacto">Contacto</a>
+                <a href="{{ route('contacto.form') }}" style="margin-right: 10px;">Contacto</a>
                 <a href="/terminos-y-condiciones">Términos y condiciones</a>
                 <a href="/privacidad">Política de privacidad</a>
             </div>

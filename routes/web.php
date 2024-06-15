@@ -6,6 +6,10 @@ use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\PeliculaController;
 use App\Http\Controllers\SerieController;
 use App\Http\Controllers\ListaController;
+use App\Http\Controllers\ContactoController;
+use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\PlataformaController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -67,3 +71,11 @@ Route::get('/series/ordenar/ano_asc', [SerieController::class, 'ordenarAnoAsc'])
 Route::get('/series/ordenar/ano_desc', [SerieController::class, 'ordenarAnoDesc'])->name('series.ordenar.ano_desc');
 Route::get('/series/ordenar/{criterio}', [SerieController::class, 'ordenar'])->name('series.ordenar');
 Route::post('/series/{serie}/calificar', [SerieController::class, 'calificar'])->name('series.calificar');
+
+Route::get('/contacto', [ContactoController::class, 'showContactForm'])->name('contacto.form');
+Route::post('/contacto', [ContactoController::class, 'submitContactForm'])->name('contacto.submit');
+
+Route::get('/plataformas', [PlataformaController::class, 'index'])->name('plataformas.index');
+Route::get('/plataformas/{id}', [PlataformaController::class, 'show'])->name('plataformas.show');
+Route::get('/politicaprivacidad', 'App\Http\Controllers\PrivacyController@politicaprivacidad')->name('politicaprivacidad');
+Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');

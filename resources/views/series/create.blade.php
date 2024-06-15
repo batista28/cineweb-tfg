@@ -1,5 +1,3 @@
-<!-- resources/views/series/create.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
@@ -63,4 +61,5 @@
             style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Crear
             Serie</button>
     </form>
-    @endsection
+</div>
+@endsection

@@ -18,53 +18,63 @@ class SerieController extends Controller
 
     public function index(Request $request)
     {
-        // Obtener parámetros de la solicitud
         $perPage = $request->input('perPage', 10);
-        $orderField = $request->input('orderField', 'puntuacion_media_asc');
-        $order = $request->input('order', 'asc');
+        $orderField = $request->input('orderField', 'titulo_asc');
         $buscar = $request->input('buscar');
 
-        // Definir los campos de ordenación disponibles
-        $orderableFields = ['titulo', 'puntuacion_media', 'ano_lanzamiento'];
+        $query = Serie::query();
 
-        // Verificar si el campo de ordenación solicitado es válido
-        if (!in_array($orderField, $orderableFields)) {
-            $orderField = 'puntuacion_media'; // Campo de ordenación predeterminado
-        }
-
-        // Verificar el sentido de la ordenación
-        $orderDirection = in_array($order, ['asc', 'desc']) ? $order : 'asc';
-
-        // Construir la consulta base
-        $query = Serie::orderBy($orderField, $orderDirection);
-
-        // Filtrar por término de búsqueda si está presente
+        // Aplicar búsqueda si se especifica
         if ($buscar) {
-            $query->where('titulo', 'like', "%$buscar%")
-                ->orWhere('ano_lanzamiento', $buscar);
+            $query->where('titulo', 'LIKE', "%$buscar%")
+                ->orWhere('sinopsis', 'LIKE', "%$buscar%");
         }
 
-        // Paginar los resultados y conservar los parámetros de consulta
-        $series = $query->paginate($perPage)->withQueryString();
+        // Aplicar ordenamiento
+        if ($orderField === 'titulo_asc') {
+            $query->orderBy('titulo');
+        } elseif ($orderField === 'titulo_desc') {
+            $query->orderByDesc('titulo');
+        } elseif ($orderField === 'puntuacion_media_asc') {
+            $query->orderBy('puntuacion_media');
+        } elseif ($orderField === 'puntuacion_media_desc') {
+            $query->orderByDesc('puntuacion_media');
+        } elseif ($orderField === 'ano_lanzamiento_asc') {
+            $query->orderBy('ano_lanzamiento');
+        } elseif ($orderField === 'ano_lanzamiento_desc') {
+            $query->orderByDesc('ano_lanzamiento');
+        }
 
-        // Retornar la vista con los datos necesarios
-        return view('series.index')->with([
-            'series' => $series,
-            'perPage' => $perPage,
-            'order' => $order,
-            'orderField' => $orderField,
-            'buscar' => $buscar,
-        ]);
+        // Obtener los resultados paginados
+        $series = $query->paginate($perPage);
+
+        return view('series.index', compact('series'));
     }
 
-
-
-    public function create()
+    public function create(Request $request)
     {
-        // Retorna la vista para crear una nueva serie
+        dd($request);
         return view('series.create');
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'titulo' => 'required|string|max:255',
+            'sinopsis' => 'required|string',
+            'genero' => 'required|string|max:255',
+            'ano_lanzamiento' => 'required|integer|min:1900|max:9999',
+            'temporadas' => 'required|integer|min:1',
+            'estado_emision' => 'required|string|max:255',
+            'puntuacion_media' => 'required|numeric|min:0|max:10',
+            'imagen' => 'required|url|max:255',
+        ]);
+
+        Serie::create($request->all());
+
+        return redirect()->route('series.index')
+            ->with('success', '¡La serie se ha creado correctamente!');
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -151,19 +161,7 @@ class SerieController extends Controller
         return redirect()->route('series.index')->with('success', 'Serie actualizada exitosamente.');
     }
 
-    public function store(Request $request)
-    {
-        // Valida los datos del formulario
-        $request->validate([
-            // Aquí puedes especificar las reglas de validación para cada campo
-        ]);
 
-        // Crea una nueva serie con los datos del formulario
-        Serie::create($request->all());
-
-        // Redirecciona a la lista de series
-        return redirect()->route('series.index');
-    }
 
     /**
      * Display the specified resource.
