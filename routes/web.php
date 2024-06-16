@@ -23,9 +23,8 @@ use App\Http\Controllers\PlataformaController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
-
 // Define Custom User Registration & Login Routes
 Route::controller(LoginRegisterController::class)->group(function () {
     Route::get('/register', 'register')->name('register');
