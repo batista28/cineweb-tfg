@@ -370,6 +370,7 @@
 
 <body>
     <!-- Header -->
+    <!-- Header -->
     <header class="header">
         <div class="header1">
             <img src="{{ asset('img/logoCineWeb.jpeg') }}" alt="Imagen de logoCineWEB" class="logo" />
@@ -381,6 +382,12 @@
             <a href="{{ route('listas.index') }}" style="margin-right: 10px;">Listas</a>
 
             @auth
+                <!-- Mostrar botón de administrador solo si el usuario es admin -->
+                @if (Auth::user()->is_admin)
+                    <a href="{{ route('admin.users.index') }}" class="btn-style">Usuarios</a>
+                @endif
+
+
                 <form method="POST" action="{{ route('logout') }}" style="display:inline;">
                     @csrf
                     <button class='btn-style' type="submit">Cerrar
@@ -392,7 +399,9 @@
                     <a href="{{ route('register') }}">Registrarse</a>
                 @endif
             @endauth
+        </nav>
     </header>
+
 
     <!-- Barra de navegación -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -428,6 +437,9 @@
                 <a href="#" title="LinkedIn">
                     <img src="{{ asset('img/linkledin.png') }}" alt="LinkedIn" />
                 </a>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2024 CineWeb. Creada por Antonio Jesús Batista.</p>
             </div>
         </div>
     </footer>

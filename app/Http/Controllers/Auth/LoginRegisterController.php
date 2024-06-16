@@ -72,21 +72,21 @@ class LoginRegisterController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-    
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            
+
             // Establecer una variable de sesión para mostrar la alerta solo una vez
             $request->session()->flash('showLoginAlert', true);
-    
+
             return redirect()->route('home');
         }
-    
+
         return back()->withErrors([
             'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
         ])->onlyInput('email');
     }
-    
+
 
     /**
      * Display a home to authenticated & verified users.
@@ -99,7 +99,7 @@ class LoginRegisterController extends Controller
         $orderField = $request->input('orderField', 'puntuacion_media_asc');
         $order = $request->input('order', 'asc');
         $search = $request->input('search');
-        $login=true;
+        $login = true;
         switch ($orderField) {
             case 'titulo_desc':
                 $orderField = 'titulo';
@@ -143,8 +143,8 @@ class LoginRegisterController extends Controller
             'perPage' => $perPage,
             'order' => $order,
             'orderField' => $request->input('orderField'),
-            'search' => $search, 
-            'login' =>  $login
+            'search' => $search,
+            'login' => $login
         ]);
     }
 
@@ -160,6 +160,6 @@ class LoginRegisterController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login')
-            ->withSuccess('You have logged out successfully!');
+            ->withSuccess('Se ha cerrado la sesion correctamente!');
     }
 }

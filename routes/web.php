@@ -43,40 +43,61 @@ Route::controller(VerificationController::class)->group(function () {
     Route::post('/email/resend', 'resend')->name('verification.resend');
 });
 
-Route::get('/peliculas', [PeliculaController::class, 'index'])->name('peliculas.index');
-Route::get('/peliculas/create', [PeliculaController::class, 'create'])->name('peliculas.create');
-Route::post('/peliculas', [PeliculaController::class, 'store'])->name('peliculas.store');
-Route::get('/peliculas/{pelicula}', [PeliculaController::class, 'show'])->name('peliculas.show');
-Route::get('/peliculas/{pelicula}/edit', [PeliculaController::class, 'edit'])->name('peliculas.edit');
-Route::put('/peliculas/{pelicula}', [PeliculaController::class, 'update'])->name('peliculas.update');
-Route::delete('/peliculas/{pelicula}', [PeliculaController::class, 'destroy'])->name('peliculas.destroy');
 
-Route::get('/series', [SerieController::class, 'index'])->name('series.index');
-Route::get('/series/{id}', [SerieController::class, 'show'])->name('series.show');
-Route::get('/serie/create', [SerieController::class, 'create'])->name('series.create');
-Route::post('/series', [SerieController::class, 'store'])->name('series.store');
-Route::get('/series/{serie}/edit', [SerieController::class, 'edit'])->name('series.edit');
-Route::put('/series/{serie}', [SerieController::class, 'update'])->name('series.update');
-Route::delete('/series/{serie}', [SerieController::class, 'destroy'])->name('series.destroy');
-Route::get('/listas', [ListaController::class, 'index'])->name('listas.index');
-Route::post('/listas/addPelicula', [ListaController::class, 'addPelicula'])->name('listas.addPelicula');
-Route::post('/listas/addSerie', [ListaController::class, 'addSerie'])->name('listas.addSerie');
 
-Route::get('/listas/{tipo}/agregarVista/{id}', [ListaController::class, 'agregarVista'])->name('listas.agregarVista');
+// Rutas protegidas por autenticación
+Route::middleware(['auth'])->group(function () {
+    Route::get('/peliculas', [PeliculaController::class, 'index'])->name('peliculas.index');
+    Route::get('/peliculas/create', [PeliculaController::class, 'create'])->name('peliculas.create');
+    Route::post('/peliculas', [PeliculaController::class, 'store'])->name('peliculas.store');
+    Route::get('/peliculas/{pelicula}', [PeliculaController::class, 'show'])->name('peliculas.show');
+    Route::get('/peliculas/{pelicula}/edit', [PeliculaController::class, 'edit'])->name('peliculas.edit');
+    Route::put('/peliculas/{pelicula}', [PeliculaController::class, 'update'])->name('peliculas.update');
+    Route::delete('/peliculas/{pelicula}', [PeliculaController::class, 'destroy'])->name('peliculas.destroy');
 
-Route::get('/lista-pendientes', [SerieController::class, 'mostrarListaPendientes'])->name('lista_pendientes');
-Route::post('/peliculas/{pelicula}/calificar', [PeliculaController::class, 'calificar'])->name('peliculas.calificar');
-Route::post('/series/{serie}/agregar-a-pendientes', [SerieController::class, 'agregarAPendientes'])->name('series.agregar_a_pendientes');
-Route::post('/series/{serie}/agregar-a-vistas', [SerieController::class, 'agregarAVistas'])->name('series.agregar_a_vistas');
-Route::get('/series/ordenar/ano_asc', [SerieController::class, 'ordenarAnoAsc'])->name('series.ordenar.ano_asc');
-Route::get('/series/ordenar/ano_desc', [SerieController::class, 'ordenarAnoDesc'])->name('series.ordenar.ano_desc');
-Route::get('/series/ordenar/{criterio}', [SerieController::class, 'ordenar'])->name('series.ordenar');
-Route::post('/series/{serie}/calificar', [SerieController::class, 'calificar'])->name('series.calificar');
+    Route::get('/series', [SerieController::class, 'index'])->name('series.index');
+    Route::get('/series/{id}', [SerieController::class, 'show'])->name('series.show');
+    Route::get('/serie/create', [SerieController::class, 'create'])->name('series.create');
+    Route::post('/series', [SerieController::class, 'store'])->name('series.store');
+    Route::get('/series/{serie}/edit', [SerieController::class, 'edit'])->name('series.edit');
+    Route::put('/series/{serie}', [SerieController::class, 'update'])->name('series.update');
+    Route::delete('/series/{serie}', [SerieController::class, 'destroy'])->name('series.destroy');
+    Route::get('/listas', [ListaController::class, 'index'])->name('listas.index');
+    Route::post('/listas/addPelicula', [ListaController::class, 'addPelicula'])->name('listas.addPelicula');
+    Route::post('/listas/addSerie', [ListaController::class, 'addSerie'])->name('listas.addSerie');
+    Route::get('/listas/{tipo}/agregarVista/{id}', [ListaController::class, 'agregarVista'])->name('listas.agregarVista');
 
-Route::get('/contacto', [ContactoController::class, 'showContactForm'])->name('contacto.form');
-Route::post('/contacto', [ContactoController::class, 'submitContactForm'])->name('contacto.submit');
+    Route::get('/lista-pendientes', [SerieController::class, 'mostrarListaPendientes'])->name('lista_pendientes');
+    Route::post('/peliculas/{pelicula}/calificar', [PeliculaController::class, 'calificar'])->name('peliculas.calificar');
+    Route::post('/series/{serie}/agregar-a-pendientes', [SerieController::class, 'agregarAPendientes'])->name('series.agregar_a_pendientes');
+    Route::post('/series/{serie}/agregar-a-vistas', [SerieController::class, 'agregarAVistas'])->name('series.agregar_a_vistas');
+    Route::get('/series/ordenar/ano_asc', [SerieController::class, 'ordenarAnoAsc'])->name('series.ordenar.ano_asc');
+    Route::get('/series/ordenar/ano_desc', [SerieController::class, 'ordenarAnoDesc'])->name('series.ordenar.ano_desc');
+    Route::get('/series/ordenar/{criterio}', [SerieController::class, 'ordenar'])->name('series.ordenar');
+    Route::post('/series/{serie}/calificar', [SerieController::class, 'calificar'])->name('series.calificar');
 
-Route::get('/plataformas', [PlataformaController::class, 'index'])->name('plataformas.index');
-Route::get('/plataformas/{id}', [PlataformaController::class, 'show'])->name('plataformas.show');
-Route::get('/politicaprivacidad', 'App\Http\Controllers\PrivacyController@politicaprivacidad')->name('politicaprivacidad');
-Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
+    Route::get('/contacto', [ContactoController::class, 'showContactForm'])->name('contacto.form');
+    Route::post('/contacto', [ContactoController::class, 'submitContactForm'])->name('contacto.submit');
+
+    Route::get('/plataformas', [PlataformaController::class, 'index'])->name('plataformas.index');
+    Route::get('/plataformas/{id}', [PlataformaController::class, 'show'])->name('plataformas.show');
+    Route::get('/politicaprivacidad', 'App\Http\Controllers\PrivacyController@politicaprivacidad')->name('politicaprivacidad');
+    Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');// routes/web.php
+});
+
+
+
+use App\Http\Controllers\AdminUserController;
+
+Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+Route::get('/admin/users/create', [AdminUserController::class, 'create'])->name('admin.users.create');
+Route::post('/admin/users', [AdminUserController::class, 'store'])->name('admin.users.store');
+Route::get('/admin/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+Route::put('/admin/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+Route::get('/admin/users/{user}', [AdminUserController::class, 'show'])->name('admin.users.show');
+Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+
+// Middleware para verificar si el usuario tiene permisos de administrador
+Route::middleware('admin')->get('/admin', function () {
+    return view('admin.users.index');
+})->name('admin.dashboard');

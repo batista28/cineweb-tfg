@@ -17,8 +17,8 @@
             </form>
         </div>
     </div>
-    <a href="{{ route('admin.users.index') }}"
-        style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; text-decoration: none; display: inline-block;">Volver
-        a Usuarios</a>
+    <button onclick="window.location.href='{{ route('admin.users.index') }}'" class="btn-style">Volver a
+        Usuarios</button>
+
 </div>
 @endsection
