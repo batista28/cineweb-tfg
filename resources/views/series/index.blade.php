@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
+
+@section('content')
 
 <head>
     <meta charset="UTF-8">
@@ -71,6 +72,32 @@
             transition: all 0.3s ease;
         }
 
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination .page-link {
+            color: #fff;
+            background-color: #1a73e8;
+            border: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #1558b3;
+        }
+
+        .pagination .page-link.disabled {
+            background-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
         .ordenar-select:hover,
         .buscar-input:hover {
             border-color: #1abc9c;
@@ -125,14 +152,19 @@
             max-height: calc(100vh - 200px);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+
 
         .button-container {
             gap: 300px;
             /* Ajusta el espacio entre los botones */
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
 
         th,
@@ -140,7 +172,8 @@
             border-top: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
             padding: 8px;
-            text-align: left;
+            text-align: center;
+            /* Alineación centrada para todas las celdas */
             color: #fff;
             background-color: #343a40;
             font-family: 'Inter', Arial, sans-serif;
@@ -337,6 +370,7 @@
         .btn-add:hover {
             background-color: #1abc9c;
         }
+
         .btn-style {
             display: inline-block;
             padding: 10px 20px;
@@ -359,60 +393,15 @@
             color: inherit;
             text-decoration: none;
         }
-           /* Estilos para hacer la tabla responsive utilizando Bootstrap */
-           @media (max-width: 768px) {
-            /* Reduce el padding de las celdas en pantallas pequeñas */
-            th, td {
-                padding: 4px;
-                font-size: 14px;
-            }
-        }
-
-        /* Ajuste adicional para pantallas muy pequeñas */
-        @media (max-width: 576px) {
-            /* Oculta la imagen del poster en filas de la tabla */
-            table img {
-                display: none;
-            }
-        }
     </style>
 </head>
 
 <body>
-    <header class="header">
-        <div class="header1">
-            <img src="{{ asset('img/logoCineWeb.jpeg') }}" alt="Imagen de logoCineWEB" class="logo" />
-            <h1>CineWeb</h1>
-        </div>
-        <nav>
-            <a href="{{ route('peliculas.index') }}" style="margin-right: 10px;">Peliculas</a>
-            <a href="{{ route('series.index') }}" style="margin-right: 10px;">Series</a>
-            <a href="{{ route('listas.index') }}" style="margin-right: 10px;">Listas</a>
 
-          
-
-            @auth
-                <form method="POST" action="{{ route('logout') }}" style="display:inline;">
-                    @csrf
-                    <button class='btn-style' type="submit"
-                       >Cerrar
-                        sesión</button>
-                </form>
-            @else
-                <a href="{{ route('login') }}">Iniciar sesión</a>
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}">Registrarse</a>
-                @endif
-            @endauth
-      </nav>
-    </header>
     <main>
         <div class="listapeliculas-container">
             <h2>Lista de Series</h2>
             <div class="ordenar-container">
-                @if (auth()->check() && auth()->user()->is_admin)
-                    <a href="{{ route('series.create') }}" class="btn btn-add">Añadir nueva serie</a>
-                @endif
                 <form action="{{ route('series.index') }}" method="GET" id="filtersForm">
                     <label for="perPage" class="ordenar-label">Número por página:</label>
                     <select name="perPage" id="perPage" class="ordenar-select"
@@ -439,9 +428,13 @@
                     <input type="text" id="buscar" name="buscar" class="buscar-input"
                         value="{{ request()->input('buscar') }}" placeholder="Buscar..."
                         onkeyup="if(event.keyCode === 13) { document.getElementById('filtersForm').submit(); }">
-
-
                 </form>
+
+                @auth
+                    @if (auth()->check() && auth()->user()->is_admin)
+                        <a href="{{ route('series.create') }}" class="btn btn-add">Añadir Nueva Serie</a>
+                    @endif
+                @endauth
             </div>
 
             <table>
@@ -456,10 +449,10 @@
                         <th>Estado</th>
                         <th>Puntuación</th>
                         @auth
-                                @if (auth()->check() && auth()->user()->is_admin)
-                                    <th colspan="2">Acciones</th>
-                                @endif
-                            @endauth
+                            @if (auth()->check() && auth()->user()->is_admin)
+                                <th colspan="2">Acciones</th>
+                            @endif
+                        @endauth
                     </tr>
                 </thead>
                 <tbody>
@@ -476,34 +469,34 @@
                             <td>{{ $serie->ano_lanzamiento }}</td>
                             <td>{{ $serie->temporadas }}</td>
                             <td>{{ $serie->estado_emision }}</td>
-                            <td>{{ $serie->puntuacion_media }}</td>
+                            <td>{{ number_format($serie->puntuacion_media, 1) }}</td>
                             @auth
-                                    @if (auth()->check() && auth()->user()->is_admin)
-
-                                        <td>
-                                            <!-- Botón de Editar -->
-                                            <div class="button-container">
-                                                <a href="{{ route('series.edit', ['serie' => $serie->id]) }}"
-                                                    class="btn btn-warning">Editar</a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <!-- Botón de Eliminar con ventana emergente de confirmación -->
-                                            <div class="button-container">
-                                                <form action="{{ route('series.destroy', $serie->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger"
-                                                        onclick="return confirm('¿Estás seguro de que quieres eliminar esta película?')">Borrar</button>
-                                                </form>
-                                            </div>
-                                        </td>
-
-                                    @endif
-                                @endauth</tr>
+                                @if (auth()->check() && auth()->user()->is_admin)
+                                    <td>
+                                        <!-- Botón de Editar -->
+                                        <div class="button-container">
+                                            <a href="{{ route('series.edit', ['serie' => $serie->id]) }}"
+                                                class="btn btn-warning">Editar</a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <!-- Botón de Eliminar con ventana emergente de confirmación -->
+                                        <div class="button-container">
+                                            <form action="{{ route('series.destroy', $serie->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger"
+                                                    onclick="return confirm('¿Estás seguro de que quieres eliminar esta serie?')">Borrar</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                @endif
+                            @endauth
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
+
             <div class="pagination">
                 <div class="pagination-container">
                     {{ $series->links() }}
@@ -511,30 +504,4 @@
             </div>
         </div>
     </main>
-    <footer class="footer">
-        <div class="footer-wrapper">
-            <div class="footer-links">
-                <a href="/sobre-nosotros">Sobre nosotros</a>
-                <a href="{{ route('contacto.form') }}" style="margin-right: 10px;">Contacto</a>
-                <a href="/terminos-y-condiciones">Términos y condiciones</a>
-                <a href="/privacidad">Política de privacidad</a>
-            </div>
-            <div class="social-links">
-                <a href="#" title="Instagram">
-                    <img src="{{ asset('img/Instagram.png') }}" alt="Instagram" />
-                </a>
-                <a href="https://www.facebook.com/DaviDiaz.Cine/" title="Facebook">
-                    <img src="{{ asset('img/facebook.png') }}" alt="Facebook" />
-                </a>
-                <a href="https://twitter.com/?lang=es" title="Twitter">
-                    <img src="{{ asset('img/x.png') }}" alt="Twitter" />
-                </a>
-                <a href="#" title="LinkedIn">
-                    <img src="{{ asset('img/linkledin.png') }}" alt="LinkedIn" />
-                </a>
-            </div>
-        </div>
-    </footer>
-</body>
-
-</html>
+    @endsection

@@ -1,5 +1,28 @@
 @extends('layouts.app')
+<style>
+    .btn-style {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background-color: #049dbf;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
+    .btn-style:hover {
+        background-color: #034e5f;
+    }
+
+    .btn-style a {
+        color: inherit;
+        text-decoration: none;
+    }
+</style>
 @section('content')
 <div style="max-width: 600px; margin: auto; color: white; padding-bottom: 80px;">
     <h1 style="margin-bottom: 20px; color: white;">Editar Serie: {{ $serie->titulo }}</h1>
@@ -68,8 +91,7 @@
                 required>
         </div>
 
-        <button type="submit" class="btn btn-primary"
-            style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Actualizar</button>
+        <button type="submit" class='btn-style'">Actualizar</button>
     </form>
 </div>
 @endsection

@@ -1,5 +1,28 @@
 @extends('layouts.app')
+<style>
+    .btn-style {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background-color: #049dbf;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
+    .btn-style:hover {
+        background-color: #034e5f;
+    }
+
+    .btn-style a {
+        color: inherit;
+        text-decoration: none;
+    }
+</style>
 @section('content')
 <div class="container">
     <div class="row">
@@ -25,14 +48,14 @@
                                     <input type="hidden" name="serieId" value="{{ $serie->id }}">
                                     <input type="hidden" name="nombre_lista" value="series_pendientes">
                                     <input type="hidden" name="estado" value="pendiente">
-                                    <button type="submit" class="btn btn-primary">Agregar a Pendientes</button>
+                                    <button type="submit" class='btn-style'>Agregar a Pendientes</button>
                                 </form>
                                 <form action="{{ route('listas.addSerie') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="serieId" value="{{ $serie->id }}">
                                     <input type="hidden" name="nombre_lista" value="series_vistas">
                                     <input type="hidden" name="estado" value="vista">
-                                    <button type="submit" class="btn btn-success">Agregar a Vistas</button>
+                                    <button type="submit" class='btn-style'>Agregar a Vistas</button>
                                 </form>
                             @endauth
                         </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pelicula;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ListaItem;
 
 
 class PeliculaController extends Controller
@@ -186,19 +187,48 @@ class PeliculaController extends Controller
         // Obtener la película seleccionada
         $pelicula = Pelicula::findOrFail($id);
 
-        // Obtener películas relacionadas por género
+        // Verificar si el usuario está autenticado
+        $user = Auth::user();
+
+        // Verificar si la película está en la lista de pendientes del usuario
+        $enListaPendientes = false;
+        if ($user) {
+            $listaPendientes = ListaItem::whereHas('lista', function ($query) use ($user) {
+                $query->where('ID_usuario', $user->id)
+                    ->where('nombre_lista', 'peliculas_pendientes');
+            })->where('pelicula_id', $pelicula->id)->exists();
+
+            if ($listaPendientes) {
+                $enListaPendientes = true;
+            }
+        }
+
+        // Verificar si la película está en la lista de vistas del usuario
+        $enListaVistas = false;
+        if ($user) {
+            $listaVistas = ListaItem::whereHas('lista', function ($query) use ($user) {
+                $query->where('ID_usuario', $user->id)
+                    ->where('nombre_lista', 'peliculas_vistas');
+            })->where('pelicula_id', $pelicula->id)->exists();
+
+            if ($listaVistas) {
+                $enListaVistas = true;
+            }
+        }
+
+        // Obtener películas relacionadas por género (excluyendo la película actual)
         $peliculasRelacionadasPorGenero = Pelicula::where('genero', $pelicula->genero)
             ->where('id', '!=', $id) // Excluir la película seleccionada
             ->take(1) // Limitar a 1 película relacionada
             ->get();
 
-        // Obtener películas relacionadas por director
+        // Obtener películas relacionadas por director (excluyendo la película actual)
         $peliculasRelacionadasPorDirector = Pelicula::where('director', $pelicula->director)
             ->where('id', '!=', $id) // Excluir la película seleccionada
             ->take(1) // Limitar a 1 película relacionada
             ->get();
 
-        return view('peliculas.show', compact('pelicula', 'peliculasRelacionadasPorGenero', 'peliculasRelacionadasPorDirector'));
+        return view('peliculas.show', compact('pelicula', 'enListaPendientes', 'enListaVistas', 'peliculasRelacionadasPorGenero', 'peliculasRelacionadasPorDirector'));
     }
 
     public function crear(Request $request)

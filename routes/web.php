@@ -53,7 +53,7 @@ Route::delete('/peliculas/{pelicula}', [PeliculaController::class, 'destroy'])->
 
 Route::get('/series', [SerieController::class, 'index'])->name('series.index');
 Route::get('/series/{id}', [SerieController::class, 'show'])->name('series.show');
-Route::get('/series/create', [SerieController::class, 'create'])->name('series.create');
+Route::get('/serie/create', [SerieController::class, 'create'])->name('series.create');
 Route::post('/series', [SerieController::class, 'store'])->name('series.store');
 Route::get('/series/{serie}/edit', [SerieController::class, 'edit'])->name('series.edit');
 Route::put('/series/{serie}', [SerieController::class, 'update'])->name('series.update');
@@ -61,7 +61,8 @@ Route::delete('/series/{serie}', [SerieController::class, 'destroy'])->name('ser
 Route::get('/listas', [ListaController::class, 'index'])->name('listas.index');
 Route::post('/listas/addPelicula', [ListaController::class, 'addPelicula'])->name('listas.addPelicula');
 Route::post('/listas/addSerie', [ListaController::class, 'addSerie'])->name('listas.addSerie');
-Route::post('/listas/agregarVista/{tipo}/{id}', [ListaController::class, 'agregarVista'])->name('listas.agregarVista');
+
+Route::get('/listas/{tipo}/agregarVista/{id}', [ListaController::class, 'agregarVista'])->name('listas.agregarVista');
 
 Route::get('/lista-pendientes', [SerieController::class, 'mostrarListaPendientes'])->name('lista_pendientes');
 Route::post('/peliculas/{pelicula}/calificar', [PeliculaController::class, 'calificar'])->name('peliculas.calificar');

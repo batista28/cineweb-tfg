@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
+
+@section('content')
 
 <head>
     <meta charset="UTF-8">
@@ -72,6 +73,32 @@
             transition: all 0.3s ease;
         }
 
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination .page-link {
+            color: #fff;
+            background-color: #1a73e8;
+            border: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #1558b3;
+        }
+
+        .pagination .page-link.disabled {
+            background-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
         .ordenar-select:hover,
         .buscar-input:hover {
             border-color: #1abc9c;
@@ -126,14 +153,19 @@
             max-height: calc(100vh - 200px);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+
 
         .button-container {
             gap: 300px;
             /* Ajusta el espacio entre los botones */
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
 
         th,
@@ -141,7 +173,8 @@
             border-top: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
             padding: 8px;
-            text-align: left;
+            text-align: center;
+            /* Alineación centrada para todas las celdas */
             color: #fff;
             background-color: #343a40;
             font-family: 'Inter', Arial, sans-serif;
@@ -361,46 +394,112 @@
             color: inherit;
             text-decoration: none;
         }
+
+        < !-- En la sección <style>de tu vista index.blade.php o en un archivo CSS externo --><style>
+        /* Estilo para la tabla en modo responsive */
+        @media (max-width: 768px) {
+            .listapeliculas-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+                /* Ancho mínimo para evitar que se colapse completamente */
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            th,
+            td {
+                border-top: 1px solid #ddd;
+                border-bottom: 1px solid #ddd;
+                padding: 8px;
+                text-align: center;
+                /* Alineación centrada para todas las celdas */
+                color: #fff;
+                background-color: #343a40;
+                font-family: 'Inter', Arial, sans-serif;
+                white-space: nowrap;
+                /* Evitar que el contenido se rompa en varias líneas */
+            }
+
+            th:first-child,
+            td:first-child {
+                border-left: 1px solid #ddd;
+            }
+
+            th:last-child,
+            td:last-child {
+                border-right: 1px solid #ddd;
+            }
+
+            th {
+                background-color: #343a40;
+            }
+
+            .listapeliculas-container h2 {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+                color: #fff;
+                text-align: center;
+                font-family: 'Inter', Arial, sans-serif;
+            }
+
+            .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .pagination-container {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 100px;
+            }
+
+            .pagination a {
+                font-size: 16px;
+            }
+
+            .resultado {
+                font-size: 14px;
+                color: #fff;
+            }
+
+            tr:nth-child(even) {
+                background-color: #343a40;
+            }
+
+            tr:hover {
+                background-color: #545a60;
+            }
+
+            th,
+            td {
+                min-width: 100px;
+                /* Ancho mínimo para cada celda */
+            }
+        }
+    </style>
+
     </style>
 </head>
 
 <body>
-    <header class="header">
-        <div class="header1">
-            <img src="{{ asset('img/logoCineWeb.jpeg') }}" alt="Imagen de logoCineWEB" class="logo" />
-            <h1>CineWeb</h1>
-        </div>
-        <nav>
-            <a href="{{ route('peliculas.index') }}">Peliculas</a>
-            <a href="{{ route('series.index') }}">Series</a>
-            <a href="{{ route('listas.index') }}" style="margin-right: 10px;">Listas</a>
 
-
-            @auth
-                <form method="POST" action="{{ route('logout') }}" style="display:inline;">
-                    @csrf
-                    <button class='btn-style' type="submit">Cerrar
-                        sesión</button>
-                </form>
-            @else
-                <a href="{{ route('login') }}">Iniciar sesión</a>
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}">Registrarse</a>
-                @endif
-            @endauth
-        </nav>
-    </header>
 
     <main>
         <div class="listapeliculas-container">
             <h2>Lista de Películas</h2>
 
             <div class="ordenar-container">
-                @if (auth()->check() && auth()->user()->is_admin)
-                    <a href="{{ route('peliculas.create') }}" class="btn btn-add">Añadir nueva película</a>
-                @endif
+
                 <form action="{{ route('peliculas.index') }}" method="GET" id="perPageForm">
-                    <label for="perPage" class="ordenar-label">Mostrar:</label>
+                    <label for="perPage" class="ordenar-label">Número por página:</label>
                     <select name="perPage" id="perPage" class="ordenar-select">
                         <option value="5" {{ request()->input('perPage', 10) == 5 ? 'selected' : '' }}>5</option>
                         <option value="10" {{ request()->input('perPage', 10) == 10 ? 'selected' : '' }}>10</option>
@@ -427,7 +526,9 @@
                     <label for="search" class="buscar-label">Buscar:</label>
                     <input type="text" name="search" id="search" class="buscar-input" placeholder="Título o Año"
                         value="{{ request()->input('search') }}">
-                </form>
+                </form> @if (auth()->check() && auth()->user()->is_admin)
+                    <a href="{{ route('peliculas.create') }}" class="btn btn-add">Añadir nueva película</a>
+                @endif
             </div>
 
             <!-- Margen entre controles y la tabla -->
@@ -463,7 +564,8 @@
                                 <td>{{ $pelicula->genero }}</td>
                                 <td>{{ $pelicula->ano_lanzamiento }}</td>
                                 <td>{{ $pelicula->director }}</td>
-                                <td>{{ $pelicula->puntuacion_media }}</td>
+                                <td>{{ number_format($pelicula->puntuacion_media, 1) }}</td>
+
                                 @auth
                                     @if (auth()->check() && auth()->user()->is_admin)
 
@@ -502,31 +604,7 @@
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="footer-wrapper">
-            <div class="footer-links">
 
-
-                <a href="/contacto">Contacto</a>
-                <a href="/terminos-y-condiciones">Términos y condiciones</a>
-                <a href="/politicaprivacidad">Política de privacidad</a>
-            </div>
-            <div class="social-links">
-                <a href="#" title="Instagram">
-                    <img src="{{ asset('img/Instagram.png') }}" alt="Instagram" />
-                </a>
-                <a href="https://www.facebook.com/DaviDiaz.Cine/" title="Facebook">
-                    <img src="{{ asset('img/facebook.png') }}" alt="Facebook" />
-                </a>
-                <a href="https://twitter.com/?lang=es" title="Twitter">
-                    <img src="{{ asset('img/x.png') }}" alt="Twitter" />
-                </a>
-                <a href="#" title="LinkedIn">
-                    <img src="{{ asset('img/linkledin.png') }}" alt="LinkedIn" />
-                </a>
-            </div>
-        </div>
-    </footer>
 
     <script>
         document.getElementById('perPage').addEventListener('change', function () {
@@ -540,21 +618,19 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
-        var showLoginAlert = '{{ session("showLoginAlert") }}';
+            var showLoginAlert = '{{ session("showLoginAlert") }}';
 
-        if (showLoginAlert == '1') {
-            Swal.fire({
-                title: '¡Has iniciado sesión!',
-                text: 'Enhorabuena, has iniciado sesión con éxito y podrás disfrutar completamente de la página.',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
+            if (showLoginAlert == '1') {
+                Swal.fire({
+                    title: '¡Has iniciado sesión!',
+                    text: 'Enhorabuena, has iniciado sesión con éxito y podrás disfrutar completamente de la página.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
 
             // Una vez mostrada la alerta, limpiar la sesión para no mostrarla nuevamente
             {{ session(['showLoginAlert' => null]) }};
-        }
-    });
+            }
+        });
     </script>
-</body>
-
-</html>
+    @endsection

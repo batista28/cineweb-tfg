@@ -1,5 +1,28 @@
 @extends('layouts.app')
+<style>
+    .btn-style {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background-color: #049dbf;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
+    .btn-style:hover {
+        background-color: #034e5f;
+    }
+
+    .btn-style a {
+        color: inherit;
+        text-decoration: none;
+    }
+</style>
 @section('content')
 <div style="max-width: 600px; margin: auto; color: white; padding-bottom: 80px;">
     <h1 style="margin-bottom: 20px; color: white;">Crear nueva serie</h1>
@@ -52,13 +75,12 @@
                 required>
         </div>
         <div style="margin-bottom: 20px;">
-            <label for="imagen" style="display: block; margin-bottom: 5px; color: white;">URL de la imagen:</label>
+            <label for="imagen" style="display: block; margin-bottom: 5px; color: white;">URL del Poster:</label>
             <input type="text" id="imagen" name="imagen"
                 style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ced4da; background-color: #343a40; color: white;"
                 required>
         </div>
-        <button type="submit"
-            style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Crear
+        <button type="submit" class='btn-style'>Crear
             Serie</button>
     </form>
 </div>

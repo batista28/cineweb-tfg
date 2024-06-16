@@ -1,5 +1,28 @@
 @extends('layouts.app')
+<style>
+    .btn-style {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background-color: #049dbf;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
+    .btn-style:hover {
+        background-color: #034e5f;
+    }
+
+    .btn-style a {
+        color: inherit;
+        text-decoration: none;
+    }
+</style>
 @section('content')
 <div style="max-width: 600px; margin: auto; color: white; padding-bottom: 80px;">
     <h1 style="margin-bottom: 20px; color: white;">Editar Película</h1>
@@ -71,14 +94,13 @@
         </div>
 
         <div style="margin-bottom: 20px;">
-            <label for="imagen" style="display: block; margin-bottom: 5px; color: white;">URL de la Imagen</label>
+            <label for="imagen" style="display: block; margin-bottom: 5px; color: white;">URL del Póster</label>
             <input type="text" name="imagen" id="imagen"
                 style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ced4da; background-color: #343a40; color: white;"
                 value="{{ old('imagen', $pelicula->imagen) }}" placeholder="Introduce la URL de la imagen del póster">
         </div>
 
-        <button type="submit"
-            style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Actualizar
+        <button type="submit" class='btn-style'>Actualizar
             Película</button>
     </form>
 </div>

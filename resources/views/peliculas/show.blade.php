@@ -18,22 +18,26 @@
                             <p><strong>Director:</strong> {{ $pelicula->director }}</p>
                             <p><strong>Sinopsis:</strong> {{ $pelicula->sinopsis }}</p>
                             @auth
-                                <form action="{{ route('listas.addPelicula') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="peliculaId" value="{{ $pelicula->id }}">
-                                    <input type="hidden" name="nombre_lista" value="peliculas_pendientes">
-                                    <input type="hidden" name="estado" value="pendiente">
-                                    <button type="submit" class='btn-style'>Agregar a Pendientes</button>
-                                </form>
+                                @if (!$enListaPendientes) {{-- Verifica si la película no está en la lista de pendientes
+                                    --}}
+                                    <form action="{{ route('listas.addPelicula') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="peliculaId" value="{{ $pelicula->id }}">
+                                        <input type="hidden" name="nombre_lista" value="peliculas_pendientes">
+                                        <input type="hidden" name="estado" value="pendiente">
+                                        <button type="submit" class='btn-style'>Agregar a Pendientes</button>
+                                    </form>
+                                @endif
 
-                                <form action="{{ route('listas.addPelicula') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="peliculaId" value="{{ $pelicula->id }}">
-                                    <input type="hidden" name="nombre_lista" value="peliculas_vistas">
-                                    <input type="hidden" name="estado" value="vista">
-                                    <button type="submit" class='btn-style'>Agregar a Vistas</button>
-                                </form>
-
+                                @if (!$enListaVistas) {{-- Verifica si la película no está en la lista de vistas --}}
+                                    <form action="{{ route('listas.addPelicula') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="peliculaId" value="{{ $pelicula->id }}">
+                                        <input type="hidden" name="nombre_lista" value="peliculas_vistas">
+                                        <input type="hidden" name="estado" value="vista">
+                                        <button type="submit" class='btn-style'>Agregar a Vistas</button>
+                                    </form>
+                                @endif
                             @endauth
                         </div>
                     </div>

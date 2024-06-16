@@ -67,7 +67,6 @@
             margin-right: 5px;
             color: white;
             text-decoration: none;
-            font-family: 'Inter', Arial, sans-serif;
         }
 
         nav a:hover {
@@ -161,6 +160,32 @@
             gap: 10px;
         }
 
+        @media (max-width: 768px) {
+            .footer-wrapper {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+                font-size: 12px;
+            }
+
+            .social-links {
+                gap: 5px;
+            }
+
+            .footer-links a {
+                font-size: 12px;
+            }
+
+            .social-links img {
+                width: 24px;
+            }
+        }
+
         body {
             background-color: #1B2026;
             text-align: center;
@@ -205,7 +230,6 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-
             transition: background-color 0.3s;
         }
 
