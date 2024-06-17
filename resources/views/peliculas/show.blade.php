@@ -60,7 +60,7 @@
                                             @endfor
                                         </select>
                                     </div>
-                                    <button type="submit" class="btn btn-primary mt-2">Enviar Calificación</button>
+                                    <button type="submit" class='btn-style'>Enviar Calificación</button>
                                 </div>
                             </form>
 
@@ -83,6 +83,7 @@
                                     <div class="carousel-item">
                                         <img src="{{ asset($peliculaRelacionada->imagen) }}" class="d-block w-100"
                                             alt="{{ $peliculaRelacionada->titulo }}">
+
                                     </div>
                                 @endforeach
                             </div>
